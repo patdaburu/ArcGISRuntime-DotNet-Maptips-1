@@ -1,0 +1,35 @@
+﻿<Window x:Class="ArcGISRuntime_DotNet_Maptips.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ArcGISRuntime_DotNet_Maptips"
+        xmlns:esri="http://schemas.esri.com/arcgis/runtime/2013"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <esri:MapView x:Name="mapView" GeoViewTapped="MapView_GeoViewTapped" GeoViewDoubleTapped="MapView_GeoViewDoubleTapped">
+            <esri:Map>
+                <esri:Map.Basemap>
+                    <esri:Basemap Name="Basemap">
+                        <esri:ArcGISTiledLayer Name="World Topographic"
+                        Source="http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer"/>
+                    </esri:Basemap>
+                </esri:Map.Basemap>
+            </esri:Map>
+            <esri:MapView.Overlays>
+                <esri:OverlayItemsControl>
+                    <Grid x:Name="maptip" Visibility="Collapsed">
+                        <Border Padding="12" Background="Black">
+                            <TextBlock 
+                                Text="Maptip Text Goes Here" 
+                                Foreground="Yellow"
+                                x:Name="maptipTextBlock" >
+                            </TextBlock>
+                        </Border>
+                    </Grid>
+                </esri:OverlayItemsControl>
+            </esri:MapView.Overlays>
+        </esri:MapView>
+    </Grid>
+</Window>
