@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <esri:MapView x:Name="mapView" GeoViewTapped="MapView_GeoViewTapped" GeoViewDoubleTapped="MapView_GeoViewDoubleTapped">
+        <esri:MapView x:Name="mapView" GeoViewTapped="MapView_GeoViewTapped" GeoViewDoubleTapped="MapView_GeoViewDoubleTapped" SizeChanged="MapView_SizeChanged">
             <esri:Map>
                 <esri:Map.Basemap>
                     <esri:Basemap Name="Basemap">
@@ -19,6 +19,17 @@
             </esri:Map>
             <esri:MapView.Overlays>
                 <esri:OverlayItemsControl>
+                    <!-- It's pretty important to make sure the map tip
+                    connector line is aligned to the Right and the Bottom 
+                    once we start moving it around. -->
+                    <Line x:Name="mapTipConnector" 
+                          X1="0" Y1="0" X2="1" Y2="1"
+                          Stroke="Orange"
+                          StrokeThickness="6"
+                          HorizontalAlignment="Right" 
+                          VerticalAlignment="Bottom"
+                          Visibility="Collapsed" >
+                    </Line>
                     <Grid x:Name="maptip" Visibility="Collapsed">
                         <Border Padding="12" Background="Black">
                             <TextBlock 

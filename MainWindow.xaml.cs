@@ -36,6 +36,8 @@ namespace ArcGISRuntime_DotNet_Maptips
                 SimpleMarkerSymbolStyle.Circle,
                 Colors.Red, 10);
 
+        
+
         public MainWindow()
         {
             InitializeComponent();
@@ -113,6 +115,11 @@ namespace ArcGISRuntime_DotNet_Maptips
                 // Update the translation.
                 mapTipXlateTransform.X = dragMaptipStart.X + offset.X;
                 mapTipXlateTransform.Y = dragMaptipStart.Y + offset.Y;
+
+                #region Adjust the map tip connector.
+                this.mapTipConnector.X2 = dragMaptipStart.X + offset.X;
+                this.mapTipConnector.Y2 = dragMaptipStart.Y + offset.Y;
+                #endregion
             };
 
             // When the mouse goes up...
@@ -151,6 +158,7 @@ namespace ArcGISRuntime_DotNet_Maptips
             {
                 // Hide the map tip.
                 this.maptip.Visibility = Visibility.Hidden;
+                this.mapTipConnector.Visibility = Visibility.Hidden;
                 return;
             }
             // We got a hit? Great!
@@ -178,6 +186,17 @@ namespace ArcGISRuntime_DotNet_Maptips
                 xlateTransform.Y = 0;
             }
 
+            #region Reset the map tip connector.
+            // Make it visible.
+            this.mapTipConnector.Visibility = Visibility.Visible;
+            // Anchor it to the graphic's geometry.
+            GeoView.SetViewOverlayAnchor(this.mapTipConnector, (MapPoint)hitGraphic.Geometry);
+            // Shrink the map tip connector line so that it's hidden by the
+            // map tip.
+            this.mapTipConnector.X2 = 1;
+            this.mapTipConnector.Y2 = 1;
+            #endregion
+
         }
 
         /// <summary>
@@ -204,6 +223,13 @@ namespace ArcGISRuntime_DotNet_Maptips
             dotGraphic.Attributes["Name"] = names[(new Random()).Next(names.Length)];
             // Add the graphic to the graphics overlay.
             graphicsOverlay.Graphics.Add(dotGraphic);
+        }
+
+        private void MapView_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            // The logic gets confused when the map view size changes.  
+            // We'll need to figure this out, but for now...
+            this.maptip.Visibility = Visibility.Collapsed;
         }
     }
 }
