@@ -129,6 +129,27 @@ namespace ArcGISRuntime_DotNet_Maptips
             };
 
             #endregion
+
+            #region Displaying Layer Attribution
+            // Retrieve the base layer.  (This probably isn't how you're
+            // defining and accessing the base layer for your purposes, but
+            // for demonstration...
+            var baseLayer = this.mapView.Map.Basemap.BaseLayers[0];
+            // We should wait until the layer is loaded to grab its
+            // attribution values.
+            baseLayer.Loaded += (sender, args) =>
+            {
+                // The map will likely be loaded in another thread, so we
+                // need to invoke.
+                this.Dispatcher.Invoke(() =>
+                {
+                    // Set the relevant properties on the control.
+                    this.attributionTextBlock.Text = baseLayer.Attribution;
+                    this.attributionTextBlock.ToolTip = baseLayer.Attribution;
+                });                
+            };
+
+            #endregion
         }
 
 

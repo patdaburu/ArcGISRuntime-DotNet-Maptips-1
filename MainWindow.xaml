@@ -8,7 +8,11 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <esri:MapView x:Name="mapView" GeoViewTapped="MapView_GeoViewTapped" GeoViewDoubleTapped="MapView_GeoViewDoubleTapped" SizeChanged="MapView_SizeChanged">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <esri:MapView Grid.Row="0" x:Name="mapView" GeoViewTapped="MapView_GeoViewTapped" GeoViewDoubleTapped="MapView_GeoViewDoubleTapped" SizeChanged="MapView_SizeChanged">
             <esri:Map>
                 <esri:Map.Basemap>
                     <esri:Basemap Name="Basemap">
@@ -42,5 +46,10 @@
                 </esri:OverlayItemsControl>
             </esri:MapView.Overlays>
         </esri:MapView>
+        <TextBlock Grid.Row="1" 
+                   x:Name="attributionTextBlock" 
+                   Background="AntiqueWhite" 
+                   Text="ESRI Layer Attribution Goes Here."
+                   TextTrimming="CharacterEllipsis"/>
     </Grid>
 </Window>
