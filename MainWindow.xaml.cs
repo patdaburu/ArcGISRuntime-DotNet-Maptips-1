@@ -36,7 +36,7 @@ namespace ArcGISRuntime_DotNet_Maptips
                 SimpleMarkerSymbolStyle.Circle,
                 Colors.Red, 10);
 
-        
+
 
         public MainWindow()
         {
@@ -64,25 +64,25 @@ namespace ArcGISRuntime_DotNet_Maptips
             // Just to keep all of the relevant code within this one region,
             // let's define the function we'll use to convert the mouse
             // location we get from the MouseEventArgs
-            Func<MouseEventArgs, FrameworkElement, Point> getRelativeMousePosition = 
+            Func<MouseEventArgs, FrameworkElement, Point> getRelativeMousePosition =
                 (MouseEventArgs args, FrameworkElement element) =>
             {
                 // We need to know where the overlay anchor for the control is.
                 MapPoint overlayAnchor = GeoView.GetViewOverlayAnchor(element);
                 // Now that we know where the anchor is in terms of its 
                 // geometry, we need to know where it is on the screen.
-                Point overlayAnchorScreenPoint = 
+                Point overlayAnchorScreenPoint =
                 this.mapView.LocationToScreen(overlayAnchor);
                 // Now we want to know the mouse's position relative to the
                 // control's parent window.
                 Point mousePoint = args.GetPosition(Window.GetWindow(this.maptip));
                 // What's the different between where the mouse is and the
                 // control's anchor point?
-                var mouseAnchorDiffVector = 
+                var mouseAnchorDiffVector =
                 Point.Subtract(mousePoint, overlayAnchorScreenPoint);
                 // From the moust-to-anchor difference vector, we can now 
                 // determine the relative mouse point.
-                var relativeMousePoint = 
+                var relativeMousePoint =
                 new Point(mouseAnchorDiffVector.X, mouseAnchorDiffVector.Y);
                 // That's what we return.
                 return relativeMousePoint;
@@ -96,9 +96,9 @@ namespace ArcGISRuntime_DotNet_Maptips
                 // starting from.
                 dragMaptipStart = getRelativeMousePosition(args, this.maptip);
                 // The starting offset is the map tip's translation.
-                dragMaptipOffset = 
+                dragMaptipOffset =
                 new Vector(
-                    mapTipXlateTransform.X, 
+                    mapTipXlateTransform.X,
                     mapTipXlateTransform.Y);
                 this.maptip.CaptureMouse();
             };
@@ -146,7 +146,7 @@ namespace ArcGISRuntime_DotNet_Maptips
                     // Set the relevant properties on the control.
                     this.attributionTextBlock.Text = baseLayer.Attribution;
                     this.attributionTextBlock.ToolTip = baseLayer.Attribution;
-                });                
+                });
             };
 
             #endregion
@@ -191,7 +191,7 @@ namespace ArcGISRuntime_DotNet_Maptips
             // purposes of this example, we'll just set the text in the map
             // tip manually to match the name we gave the graphic when we
             // created it.
-            this.maptipTextBlock.Text = 
+            this.maptipTextBlock.Text =
                 string.Format("My name is {0}.", hitGraphic.Attributes["Name"]);
             // Show the map tip.
             this.maptip.Visibility = Visibility.Visible;
@@ -246,11 +246,61 @@ namespace ArcGISRuntime_DotNet_Maptips
             graphicsOverlay.Graphics.Add(dotGraphic);
         }
 
-        private void MapView_SizeChanged(object sender, SizeChangedEventArgs e)
+
+        #region MapOverlay Adjustment
+
+        /// <summary>
+        /// This flag tells us whether we're currently performing an adjustment.
+        /// </summary>
+        private bool adjusting = false;
+
+        /// <summary>
+        /// In this handler we demonstrate a rough workaround to try to bring
+        /// the map overlay back into alignment with the map when the
+        /// map view changes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void MapView_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             // The logic gets confused when the map view size changes.  
             // We'll need to figure this out, but for now...
-            this.maptip.Visibility = Visibility.Collapsed;
+            if (this.adjusting)
+            {
+                return;
+            }
+
+            // If we're in the middle of an adjustment...
+            if (this.adjusting)
+            {
+                // ...do nothing.
+                return;
+            }
+            // We're now in the middle of an adjustment.
+            this.adjusting = true;
+            // Get the current rotation from the map view.
+            double originalRotation = this.mapView.MapRotation;
+            // If the original rotation is less than half a degree...
+            if (originalRotation < 1)
+            {
+                // ...let's consider it to be at zero.
+                originalRotation = 0.0;
+            }
+            // The new rotation is the old rotation, plus 1-1/2 degrees.
+            double newRotation = originalRotation + 1.5;
+            // Rotate to the new rotation.
+            await this.mapView.SetViewpointRotationAsync(newRotation);
+            // We seem to need to wait for a moment.
+            await Task.Run(() =>
+            {
+                System.Threading.Thread.Sleep(100);
+            });
+            // Now rotate back.
+            await this.mapView.SetViewpointRotationAsync(originalRotation);
+            // We're no longer making the adjustment.
+            this.adjusting = false;
+
         }
+        #endregion
     }
 }

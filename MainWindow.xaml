@@ -12,7 +12,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <esri:MapView Grid.Row="0" x:Name="mapView" GeoViewTapped="MapView_GeoViewTapped" GeoViewDoubleTapped="MapView_GeoViewDoubleTapped" SizeChanged="MapView_SizeChanged">
+        <esri:MapView Grid.Row="0" x:Name="mapView" GeoViewTapped="MapView_GeoViewTapped" GeoViewDoubleTapped="MapView_GeoViewDoubleTapped" SizeChanged="MapView_SizeChanged" IsAttributionTextVisible="False">
             <esri:Map>
                 <esri:Map.Basemap>
                     <esri:Basemap Name="Basemap">
