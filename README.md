@@ -2,6 +2,7 @@
 A simple demonstration of the use of "maptips" with the ArcGISRuntime for .NET (WPF) Quartz Beta.
 
 To place a map tip, do the following:
+
 1. Double-click to place a marker.  (It appears as a red dot.)
 2. Click the red dot to see the map tip.
 3. You can drag the map tip control around the map.  It should remain connected to the red dot by an orange line.
